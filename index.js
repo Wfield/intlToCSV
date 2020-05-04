@@ -76,10 +76,10 @@ const matchIntlExpression = (content) => {
 }
 
 /**
- * 去除引号
+ * 去除引号和问号
  */
 const noQoute = (str) => {
-  const reg = /'|"/g;
+  const reg = /'|"|`|\?|？/g;
   return str.replace(reg, '');
 }
 
@@ -119,7 +119,7 @@ const codeChinese = (list) => {
 const splitCode = (code) => {
   const res = code.split('.');
   const [one, two, ...rest] = res;
-  return [one + '.' + two, rest.join('.')];
+  return [one + '.' + two, rest.join('.'), 'zh_CN'];
 }
 
 /**
@@ -127,7 +127,7 @@ const splitCode = (code) => {
  * @param {Array} 多语言 code 和 中文
  */
 const fillInCsv = (list) => {
-  let rowStr = 'model,code,chinese\n';
+  let rowStr = '#prompt_key,prompt_code,#lang,description\n';
   for(let i = 0; i < list.length; i++) {
     const arr = list[i];
     const code = arr[0];
@@ -139,6 +139,7 @@ const fillInCsv = (list) => {
     if(err) {
       throw new Error('write execl failed');
     }
+    console.log('已完成');
   })
 }
 
