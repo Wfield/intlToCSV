@@ -45,6 +45,19 @@ const allFilesPath = (absolutePath) => {
 }
 
 /**
+ * 去重
+ * @param {Array<string>} allIntlList 所有的多语言语句
+ */
+const noRepeatIntl = (allIntlList) => {
+  return allIntlList.reduce((prev, curr) => {
+    if(!prev.includes(curr)) {
+      prev.push(curr);
+    }
+    return prev;
+  }, []);
+}
+
+/**
  * 获取所有多语言语句
  * @param {Array<strinf>} files 初始路径下所有js文件路径
  * @return {Array<string>} 所有多语言语句
@@ -70,7 +83,9 @@ const matchIntlExpression = (content) => {
   let arr = [];
   while ((arr = reg.exec(content)) !== null) {
     const noQouteStr = noQoute(arr[0]);
-    list.push(noQouteStr);
+    if(!noCommonIntl(noQouteStr)) {
+      list.push(noQouteStr);
+    }
   }
   return list;
 }
@@ -94,6 +109,15 @@ const noCommentLines = (content) => {
   const noOneLineComment = content.replace(oneLineReg, '');
   const noMutiLineComment = noOneLineComment.replace(mutiLineReg, '');
   return noMutiLineComment;
+}
+
+/**
+ * 匹配公共的多语言语句 hzero.common
+ * @param {string} line 多语言语句
+ */
+const noCommonIntl = (line) => {
+  const reg = /intl\r?\n?\s*\.get\(hzero\.common.*\)/;
+  return reg.test(line);
 }
 
 /**
@@ -143,5 +167,5 @@ const fillInCsv = (list) => {
   })
 }
 
-const intlToCsv = compose(fillInCsv, codeChinese, allIntls, allFilesPath, absolutePath);
+const intlToCsv = compose(fillInCsv, codeChinese, noRepeatIntl, allIntls, allFilesPath, absolutePath);
 intlToCsv('./')
