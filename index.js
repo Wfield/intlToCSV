@@ -103,7 +103,7 @@ const noCommentLines = (content) => {
  */
 const codeChinese = (list) => {
   const codeChineseList = [];
-  const reg = /\((.*)\)[^]*\((.*)\)/
+  const reg = /\((.*)\)[^]*d\((.*)\)/
   for(let i = 0; i < list.length; i++) {
     const arr = reg.exec(list[i]);
     codeChineseList.push([arr[1], arr[2]]);
@@ -137,7 +137,7 @@ const fillInCsv = (list) => {
   }
   fs.appendFile('intl.csv', rowStr, (err) => {
     if(err) {
-      throw new Error('write execl failed');
+      throw new Error('write execl failed: ', err.message || err);
     }
     console.log('已完成');
   })
