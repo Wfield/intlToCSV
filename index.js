@@ -12,6 +12,9 @@ function compose() {
 	}
 }
 
+// 本文件路径
+const thisFile = path.resolve('./index.js');
+
 /**
  * 绝对路径
  * @param {string} p 初始路径
@@ -33,8 +36,9 @@ const allFilesPath = (absolutePath) => {
   }
   for(let i = 0; i < files.length; i++) {
     const file = files[i];
-    if(file.name === 'node_modules') continue;
     const fap = path.resolve(absolutePath + '/' + file.name)
+    if(file.name === 'node_modules') continue;
+    if(fap === thisFile) continue;
     if(file.isDirectory()) {
       list = list.concat(allFilesPath(fap));
     } else if(path.extname(fap) === '.js') {
@@ -105,7 +109,7 @@ const noQoute = (str) => {
  */
 const noCommentLines = (content) => {
   const oneLineReg = /\/\/.*/g;
-  const mutiLineReg = /\/\*[^]*\*\//g;
+  const mutiLineReg = /{\/\*[^]*\*\/}/g;
   const noOneLineComment = content.replace(oneLineReg, '');
   const noMutiLineComment = noOneLineComment.replace(mutiLineReg, '');
   return noMutiLineComment;
@@ -136,7 +140,7 @@ const codeChinese = (list) => {
 }
 
 /**
- * 差分多语言 code
+ * 拆分多语言 code
  * @param {string} code 多语言code
  * @return [model, code]
  */
