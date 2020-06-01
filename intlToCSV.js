@@ -13,7 +13,7 @@ function compose() {
 }
 
 // 本文件路径
-const thisFile = path.resolve('./index.js');
+const thisFile = path.resolve('./intlToCSV.js');
 
 /**
  * 绝对路径
